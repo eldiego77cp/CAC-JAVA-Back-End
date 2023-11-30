@@ -1,0 +1,179 @@
+package ar.com.codoacodo.repository;
+
+//java collection framework: spring
+import java.util.List;
+
+import ar.com.codoacodo.entity.Orador;
+
+public interface OradorRepository {
+	public void save(Orador orador);
+
+	public Orador getById(Long id);
+
+	public void update(Orador orador);
+
+	public void delete(Long id);
+
+	public List<Orador> findAll();
+}
+
+    
+https://mvnrepository.com/artifact/com.mysql/mysql-connector-j/8.2.0
+    
+https://github.com/akullpp/awesome-java#csv
+    
+package ar.com.codoacodo.repository;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class AdministradorDeConexiones {
+
+	//tener un metodo estatico: un metodo que se puede usar sin crear una instancia de la clase
+	//AdminitradordeConexiones.metodo()
+	public static Connection getConnection() {
+		String username = "root";
+		String password = "secret";
+		String port = "33060";
+		String host = "localhost";
+		String dbName = "DB-23044";
+		
+		String diverName = "com.mysql.cj.jdbc.Driver";
+		
+		String dbUrl = "jdbc:mysql://"+host+":"+port+"/"+dbName + "?serverTimeZone=UTC&useSSL=false";
+			
+		//no vemos try/catch! esto se ve en spring, PERO lo vamos a usar
+		try {
+			Class.forName(dbName);
+			return DriverManager.getConnection(dbUrl, username, password);
+		}catch(Exception e) {https://codeshare.pallet.xyz/
+			throw new IllegalArgumentException("No se pudo conectar a la db: " + dbUrl);
+		}
+	}
+}
+
+    
+package ar.com.codoacodo.repository;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.util.List;
+
+import ar.com.codoacodo.entity.Orador;
+
+public class MySqlOradorRepository implements OradorRepository {
+
+	@Override
+	public void save(Orador orador) {
+		// get del orador para obtener datos
+
+		// 1 - obtener conexion
+		Connection con = AdministradorDeConexiones.getConnection();
+
+		// 2 - preparo sql: sql injeciton!
+		String sql = "insert into orador (nombre, apellido, tema, email, fecha_alta) values (?,?,?,?,?)";
+
+		try {
+			PreparedStatement statement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			statement.setString(1, orador.getNombre());
+			statement.setString(2, orador.getApellido());
+			statement.setString(3, orador.getTema());
+			statement.setString(4, orador.getMail());
+			statement.setDate(5, new java.sql.Date(System.currentTimeMillis()));// tph: ver como pasar de LocalDate a
+																				// java.sql.Date
+
+			statement.executeUpdate();// INSERT/UPDATE/DELETE
+
+			ResultSet res = statement.getGeneratedKeys();
+			if (res.next()) {
+				Long id = res.getLong(1);// aca esta el id
+				orador.setId(id);
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException("No se pudo crear el orador:", e);
+		}
+	}
+
+	@Override
+	public Orador getById(Long id) {
+		Connection con = AdministradorDeConexiones.getConnection();
+
+		String sql = "select id, nombre, apellido, tema, email, fecha_alta from orador where id = ?";
+
+		Orador orador = null;
+		try {
+			PreparedStatement statement = con.prepareStatement(sql);
+			statement.setLong(1, id);
+
+			ResultSet res = statement.executeQuery();// SELECT
+
+			if (res.next()) {
+				Long dbId = res.getLong(1);  
+				String nombre = res.getString(2);  
+				String apellido = res.getString(3);  
+				String tema = res.getString(4);  
+				String email = res.getString(5);  
+				Date fechaAlta = res.getDate(6);  
+				
+				orador = new Orador(dbId, nombre, apellido, email, tema, LocalDate.from(fechaAlta.toInstant()));
+			}
+			
+		} catch (Exception e) {
+			throw new IllegalArgumentException("No se pudo crear el orador:", e);
+		}
+		return orador;
+	}
+
+	@Override
+	public void update(Orador orador) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void delete(Long id) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<Orador> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
+
+Repositorio profesor: https://github.com/krloss86/cac23544
+
+TOMCAT
+https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.16/bin/apache-tomcat-10.1.16.zip
+
+PARA USAR SERVLET (CONTROLLERS)
+https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api/6.0.0
+
+//Class Main (para ejecutar)
+package ar.com.codoacodo.repository;
+
+import java.time.LocalDate;
+
+import ar.com.codoacodo.entity.Orador;
+
+public class MainOradorRepository {
+
+	 public static void main(String[] args) {
+		
+		 //Interface i = new ClaseQueImplementa();
+		 OradorRepository repository = new MySqlOradorRepository();
+		 
+//		 Orador newOrador = new Orador("carlos", "lopez", "email@email.com", "java", LocalDate.now());
+//		 repository.save(newOrador);
+		 
+		 Orador newOrador = repository.getById(3L);
+		 System.out.println(newOrador);
+	}
+}
+
