@@ -17,7 +17,7 @@ public class MySqlOradorRepository implements OradorRepository {
 	public void save(Orador orador) {
 		// get del orador para obtener datos
 
-		// 2 - preparo sql: sql injeciton!
+		// 2 - preparo sql: sql injection!
 		String sql = "insert into orador (nombre, apellido, tema, email, fecha_alta) values (?,?,?,?,?)";
 
 		try(Connection con = AdministradorDeConexiones.getConnection()) {

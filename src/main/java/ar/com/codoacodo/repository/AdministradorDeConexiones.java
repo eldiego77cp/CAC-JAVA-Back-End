@@ -4,19 +4,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class AdministradorDeConexiones {
-	
-	public Connection getConnection() {
-		
+
+	//tener un metodo estatico: un metodo que se puede usar sin crear una instancia de la clase
+	//AdminitradordeConexiones.metodo()
+	public static Connection getConnection() {
 		String username = "root";
 		String password = "admin";
-		String port = "3306"; //cambiar por el port en la base de Xampp
+		String port = "3306";
 		String host = "localhost";
-		String dbName = "DB-23544"; //cambiar por el nombre en la base de Xampp
+		String dbName = "DB-23544";
 		
 		String driverName = "com.mysql.cj.jdbc.Driver";
 		
-		String dbUrl = "jdbc:mysql://"+host+":"+port+":"+"/"+dbName+ "?serverTimeZone=UTC&useSSL=false";
-		
+		String dbUrl = "jdbc:mysql://"+host+":"+port+"/"+dbName + "?allowPublicKeyRetrieval=true&serverTimeZone=UTC&useSSL=false";
+			
+		//no vemos try/catch! esto se ve en spring, PERO lo vamos a usar
 		try {
 			Class.forName(driverName);
 			return DriverManager.getConnection(dbUrl, username, password);
