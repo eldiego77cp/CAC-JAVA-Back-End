@@ -16,7 +16,7 @@ public class MySqlOradorRepository implements OradorRepository {
 	public void save(Orador orador) {
 		// get del orador para obtener datos
 
-		// 2 - preparo sql: sql injection!
+		// 2 - preparo sql: sql injeciton!
 		String sql = "insert into orador (nombre, apellido, tema, email, fecha_alta) values (?,?,?,?,?)";
 
 		try(Connection con = AdministradorDeConexiones.getConnection()) {
@@ -58,7 +58,7 @@ public class MySqlOradorRepository implements OradorRepository {
 				String email = res.getString(5);  
 				Date fechaAlta = res.getDate(6);  
 				
-			orador = new Orador(dbId, nombre, apellido, email, tema,DateUtils.asLocalDate(fechaAlta));
+			orador = new Orador(dbId, nombre, apellido, email, tema, DateUtils.asLocalDate(fechaAlta));
 			}
 			
 		} catch (Exception e) {
@@ -128,7 +128,7 @@ public class MySqlOradorRepository implements OradorRepository {
 				String email = res.getString(5);  
 				LocalDate fechaAlta = DateUtils.asLocalDate(res.getDate(6));  
 				
-				oradores.add(new Orador(dbId, nombre, apellido, email, tema,fechaAlta));
+				oradores.add(new Orador(dbId, nombre, apellido, email, tema, fechaAlta));
 			}
 			
 		} catch (Exception e) {

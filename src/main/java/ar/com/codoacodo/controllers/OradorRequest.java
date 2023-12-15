@@ -6,7 +6,7 @@ public class OradorRequest {
 	private String email;
 	private String tema;
 	
-	public OradorRequest() {
+public OradorRequest() {
 		
 	}
 	public OradorRequest(String nombre, String apellido, String email, String tema) {

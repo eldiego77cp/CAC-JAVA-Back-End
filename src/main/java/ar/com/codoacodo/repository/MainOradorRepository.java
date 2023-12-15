@@ -15,6 +15,9 @@ public class MainOradorRepository {
 		 //repository.save(new Orador("juan", "perez", "jua@mail.com", "php", LocalDate.now()));
 		 
 		 //elimino a juan!!!
+		 Orador orador = repository.getById(1L);
+		 
+		 /*
 		 Orador carlos = repository.getById(3L);
 		 
 		 carlos.setApellido("perez");
@@ -23,6 +26,9 @@ public class MainOradorRepository {
 		 
 		 repository.update(carlos);
 		 
-		 System.out.println(repository.findAll());		 
+		 System.out.println(repository.findAll());
+		 */
+		 System.out.println(orador);
+		 
 	}
 }

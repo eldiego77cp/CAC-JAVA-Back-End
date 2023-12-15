@@ -60,7 +60,7 @@ public class NuevoOradorController extends HttpServlet{
 		
 		response.getWriter().print(jsonParaEnviarALFrontend);
 	}
-
+	
 	protected void doGet(
 			HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException {
